@@ -14,19 +14,34 @@
         .then(function() { console.log("GAPI client loaded for API"); },
               function(err) { console.error("Error loading GAPI client for API", err); });
   }
+
   // Make sure the client is loaded and sign-in is complete before calling this method.
-  function execute() {
+  function reload() {
     return gapi.client.youtube.subscriptions.list({
       "part": [
-        "snippet,contentDetails"
+        "snippet"
       ],
-      "mine": true
+      "mine": true,
+      "maxResults": 50
     })
-        .then(function(response) {
+        .then(function(subscriptions) {
                 // Handle the results here (response.result has the parsed body).
-                console.log("Response", response);
-              },
-              function(err) { console.error("Execute error", err); });
+                console.log("Subscriptions", subscriptions);
+                for (let i = 0; i < 8; i++) {
+                  document.getElementById("video" + (i + 1)).src = subscriptions.result.items[i].snippet.thumbnails.default.url;
+                };
+                return gapi.client.youtube.channels.list({
+                  "part": [
+                    "snippet"
+                  ],
+                  "id": [
+                    subscriptions.result.items[0].snippet.resourceId.channelId
+                  ]
+                })
+                    .then(function(channel) {
+                      console.log("Channel", channel.result.items[0].snippet.title)
+                    })
+              });
   }
   gapi.load("client:auth2", function() {
     gapi.auth2.init({client_id: "547349998864-9jhkb7um6b7nbjdb747j4uqduqapk39g.apps.googleusercontent.com"});
@@ -53,7 +68,7 @@
   </div>
 
   <button onclick="authenticate().then(loadClient)">Log In</button>
-  <button onclick="execute()">Reload</button>
+  <button onclick="reload()">Reload</button>
 
 </div>
 
@@ -67,25 +82,25 @@
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
         <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video1" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 2</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video2" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 3</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video3" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 4</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video4" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
  </div>
@@ -93,26 +108,26 @@
   <div class="w3-row-padding">
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 5</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video5" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 6</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video6" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 7</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video7" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
-        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
-        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+        <div class="w3-display-topleft w3-black w3-padding">Video 8</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img id="video8" src="youtube.png" style="width:100%"></a>
       </div>
     </div>
   </div>
