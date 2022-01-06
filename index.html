@@ -32,14 +32,14 @@
                 };
                 return gapi.client.youtube.channels.list({
                   "part": [
-                    "snippet"
+                    "contentDetails"
                   ],
                   "id": [
                     subscriptions.result.items[0].snippet.resourceId.channelId
                   ]
                 })
                     .then(function(channel) {
-                      console.log("Channel", channel.result.items[0].snippet.title)
+                      console.log("Uploads", channel.result.items[0].contentDetails.relatedPlaylists.uploads)
                     })
               });
   }
