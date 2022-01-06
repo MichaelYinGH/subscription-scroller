@@ -1,4 +1,38 @@
 <!DOCTYPE html>
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  function authenticate() {
+    return gapi.auth2.getAuthInstance()
+        .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
+        .then(function() { console.log("Sign-in successful"); },
+              function(err) { console.error("Error signing in", err); });
+  }
+  function loadClient() {
+    gapi.client.setApiKey("AIzaSyBVKH8DSmODCJm6CKbxAiz0YIV3hkTpONk");
+    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        .then(function() { console.log("GAPI client loaded for API"); },
+              function(err) { console.error("Error loading GAPI client for API", err); });
+  }
+  // Make sure the client is loaded and sign-in is complete before calling this method.
+  function execute() {
+    return gapi.client.youtube.subscriptions.list({
+      "part": [
+        "snippet,contentDetails"
+      ],
+      "mine": true
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+  gapi.load("client:auth2", function() {
+    gapi.auth2.init({client_id: "547349998864-9jhkb7um6b7nbjdb747j4uqduqapk39g.apps.googleusercontent.com"});
+  });
+</script>
+
 <html>
 <title>Subscription Scroller</title>
 <meta charset="UTF-8">
@@ -15,11 +49,20 @@
 <div class="w3-content w3-padding" style="max-width:1564px">
 
   <div class="w3-container w3-padding-32" id="topics">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Load Videos</h3>
+  </div>
+
+  <button onclick="authenticate().then(loadClient)">Log In</button>
+  <button onclick="execute()">Reload</button>
+
+</div>
+
+<div class="w3-content w3-padding" style="max-width:1564px">
+
+  <div class="w3-container w3-padding-32" id="topics">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Subscription Feed</h3>
   </div>
 
-  <a href="example.html">YouTube API Example</a>
-
   <div class="w3-row-padding">
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
@@ -39,9 +82,21 @@
         <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
       </div>
     </div>
-  </div>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+      </div>
+    </div>
+ </div>
 
   <div class="w3-row-padding">
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-display-container">
+        <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
+        <a href="https://www.youtube.com/watch?v=2My-iWGfIs0&ab_channel=veritones"><img src="grinch.jpeg" style="width:100%"></a>
+      </div>
+    </div>
     <div class="w3-col l3 m6 w3-margin-bottom">
       <div class="w3-display-container">
         <div class="w3-display-topleft w3-black w3-padding">Video 1</div>
