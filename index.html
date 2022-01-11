@@ -17,31 +17,37 @@
 
   // Make sure the client is loaded and sign-in is complete before calling this method.
   function reload() {
-    return gapi.client.youtube.subscriptions.list({
-      "part": [
-        "snippet"
-      ],
+    let subscriptions = gapi.client.youtube.subscriptions.list({
+      "part": "snippet",
       "mine": true,
       "maxResults": 50
-    })
-        .then(function(subscriptions) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("Subscriptions", subscriptions);
-                for (let i = 0; i < 8; i++) {
-                  document.getElementById("video" + (i + 1)).src = subscriptions.result.items[i].snippet.thumbnails.default.url;
-                };
-                return gapi.client.youtube.channels.list({
-                  "part": [
-                    "contentDetails"
-                  ],
-                  "id": [
-                    subscriptions.result.items[0].snippet.resourceId.channelId
-                  ]
-                })
-                    .then(function(channel) {
-                      console.log("Uploads", channel.result.items[0].contentDetails.relatedPlaylists.uploads)
-                    })
-              });
+    }).result
+    console.log("Subscriptions", subscriptions)
+        // .then(function(subscriptions) {
+        //   // console.log("Subscriptions", subscriptions);
+        //   console.log("Subscriptions Length", subscriptions.result.items.length)
+        //   let videos = [];
+        //   for (let i = 0; i < subscriptions.result.items.length; i++) {
+        //     // document.getElementById("video" + (i + 1)).src = subscriptions.result.items[i].snippet.thumbnails.default.url;
+        //     return gapi.client.youtube.channels.list({
+        //       "part": "contentDetails",
+        //       "id": subscriptions.result.items[i].snippet.resourceId.channelId
+        //     })
+        //         .then(function(channel) {
+        //           // console.log("Uploads Playlist", channel.result.items[0].contentDetails.relatedPlaylists.uploads)
+        //           return gapi.client.youtube.playlistItems.list({
+        //             "part": "snippet",
+        //             "playlistId": channel.result.items[0].contentDetails.relatedPlaylists.uploads, 
+        //             "maxResults": 50
+        //           })
+        //               .then(function(uploads) {
+        //                 // console.log("Uploads Videos", uploads.result)
+        //                 videos = videos.concat(uploads.result.items)
+        //                 console.log("Videos", videos)
+        //               })
+        //         })
+        //   };
+        // });
   }
   gapi.load("client:auth2", function() {
     gapi.auth2.init({client_id: "547349998864-9jhkb7um6b7nbjdb747j4uqduqapk39g.apps.googleusercontent.com"});
@@ -49,7 +55,10 @@
 </script>
 
 <html>
-<title>Subscription Scroller</title>
+<head>
+  <title>Subscription Scroller</title>
+  <link rel="icon" type="image/x-icon" href="youtube.png">
+</head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
